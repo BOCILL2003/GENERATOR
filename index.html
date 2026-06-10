@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angka Generator Pro</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  padding:14px;
+  background:linear-gradient(135deg,#020617,#0f172a,#075985);
+  color:white;
+}
+
+.container{
+  width:100%;
+  max-width:520px;
+  margin:auto;
+}
+
+.title{
+  text-align:center;
+  font-size:28px;
+  font-weight:900;
+  color:#38bdf8;
+  text-shadow:0 0 16px #38bdf8;
+  margin:15px 0 20px;
+}
+
+.menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.menu button{
+  padding:13px 8px;
+  border-radius:14px;
+  border:1px solid #38bdf8;
+  background:#1e293b;
+  color:white;
+  font-weight:800;
+  font-size:13px;
+}
+
+.menu button.active{
+  background:linear-gradient(90deg,#2563eb,#38bdf8);
+}
+
+.card{
+  background:rgba(15,23,42,.96);
+  border:1px solid rgba(56,189,248,.4);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 0 22px rgba(56,189,248,.18);
+}
+
+h2{
+  color:#38bdf8;
+  margin-bottom:15px;
+  text-align:center;
+  font-size:22px;
+}
+
+.form-grid{
+  display:grid;
+  gap:10px;
+}
+
+input,select,button{
+  width:100%;
+  padding:14px;
+  border:none;
+  outline:none;
+  border-radius:13px;
+  font-size:15px;
+}
+
+input,select{
+  background:#e2e8f0;
+  color:#020617;
+}
+
+button{
+  font-weight:800;
+  cursor:pointer;
+}
+
+.btn-generate{
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  color:white;
+}
+
+.btn-random{
+  background:linear-gradient(90deg,#2563eb,#38bdf8);
+  color:white;
+}
+
+.btn-copy{
+  background:linear-gradient(90deg,#f59e0b,#f97316);
+  color:white;
+}
+
+.btn-reset{
+  background:linear-gradient(90deg,#ef4444,#b91c1c);
+  color:white;
+}
+
+.info{
+  margin:14px 0;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(56,189,248,.08);
+  color:#bfdbfe;
+  font-size:13px;
+  line-height:1.6;
+}
+
+textarea{
+  width:100%;
+  height:260px;
+  margin-top:8px;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#020617;
+  color:#22c55e;
+  font-size:15px;
+  resize:none;
+  line-height:1.6;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+@media(min-width:700px){
+  .container{
+    max-width:1100px;
+  }
+
+  .title{
+    font-size:42px;
+  }
+
+  .form-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .menu{
+    max-width:600px;
+    margin:0 auto 25px;
+  }
+
+  textarea{
+    height:280px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="title">ANGKA GENERATOR PRO</div>
+
+  <div class="menu">
+    <button id="btnBBFS" class="active" onclick="showPage('bbfs')">BBFS</button>
+    <button id="btnRandom" onclick="showPage('random')">RANDOM</button>
+  </div>
+
+  <div id="bbfsPage" class="page active">
+    <div class="card">
+      <h2>BBFS Generator</h2>
+
+      <div class="form-grid">
+        <input type="text" id="bbfs" placeholder="BBFS contoh: 12345678">
+
+        <select id="digitBBFS">
+          <option value="2">2D</option>
+          <option value="3">3D</option>
+          <option value="4">4D</option>
+        </select>
+
+        <button class="btn-generate" onclick="generateBBFS()">GENERATE</button>
+        <button class="btn-copy" onclick="copyText('hasilBBFS')">COPY</button>
+        <button class="btn-reset" onclick="resetBBFS()">RESET</button>
+      </div>
+
+      <div class="info">
+        ✔ BBFS 2D / 3D / 4D<br>
+        ✔ Format hasil: 12*34*56*<br>
+        ✔ Hapus duplikat otomatis
+      </div>
+
+      <textarea id="hasilBBFS" placeholder="Hasil BBFS muncul di sini..."></textarea>
+    </div>
+  </div>
+
+  <div id="randomPage" class="page">
+    <div class="card">
+      <h2>Random Generator</h2>
+
+      <div class="form-grid">
+        <input type="number" id="jumlahRandom" placeholder="Jumlah angka">
+
+        <select id="randomDigit">
+          <option value="2">2D</option>
+          <option value="3">3D</option>
+          <option value="4" selected>4D</option>
+          <option value="5">5D</option>
+        </select>
+
+        <select id="randomMode">
+          <option value="normal">Normal</option>
+          <option value="unique">Tanpa Duplikat Hasil</option>
+        </select>
+
+        <select id="sameNumber">
+          <option value="on">Izinkan Nomor Sama</option>
+          <option value="off">No Nomor Sama</option>
+        </select>
+
+        <button class="btn-random" onclick="generateRandom()">GENERATE</button>
+        <button class="btn-copy" onclick="copyText('hasilRandom')">COPY</button>
+        <button class="btn-reset" onclick="resetRandom()">RESET</button>
+      </div>
+
+      <div class="info">
+        ✔ Random 2D / 3D / 4D / 5D<br>
+        ✔ Bisa atur jumlah angka<br>
+        ✔ Bisa matikan nomor sama<br>
+        ✔ Format hasil: 1234*5678*
+      </div>
+
+      <textarea id="hasilRandom" placeholder="Hasil random muncul di sini..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(page){
+  document.getElementById("bbfsPage").classList.remove("active");
+  document.getElementById("randomPage").classList.remove("active");
+  document.getElementById("btnBBFS").classList.remove("active");
+  document.getElementById("btnRandom").classList.remove("active");
+
+  if(page === "bbfs"){
+    document.getElementById("bbfsPage").classList.add("active");
+    document.getElementById("btnBBFS").classList.add("active");
+  }else{
+    document.getElementById("randomPage").classList.add("active");
+    document.getElementById("btnRandom").classList.add("active");
+  }
+}
+
+function permute(arr,k){
+  let result=[];
+
+  function generate(curr,remain){
+    if(curr.length === k){
+      result.push(curr.join(""));
+      return;
+    }
+
+    for(let i=0;i<remain.length;i++){
+      let next=[...remain];
+      let num=next.splice(i,1);
+      generate(curr.concat(num),next);
+    }
+  }
+
+  generate([],arr);
+  return [...new Set(result)];
+}
+
+function generateBBFS(){
+  let bbfs=document.getElementById("bbfs").value.trim().replace(/\D/g,"");
+  let digit=parseInt(document.getElementById("digitBBFS").value);
+
+  if(bbfs === ""){
+    alert("Masukkan BBFS terlebih dahulu");
+    return;
+  }
+
+  if(digit > bbfs.length){
+    alert("Digit tidak boleh lebih besar dari jumlah BBFS");
+    return;
+  }
+
+  let hasil=permute(bbfs.split(""),digit);
+  document.getElementById("hasilBBFS").value=hasil.join("*")+"*";
+}
+
+function generateRandom(){
+  let jumlah=parseInt(document.getElementById("jumlahRandom").value);
+  let digit=parseInt(document.getElementById("randomDigit").value);
+  let mode=document.getElementById("randomMode").value;
+  let sameNumber=document.getElementById("sameNumber").value;
+
+  if(isNaN(jumlah) || jumlah <= 0){
+    alert("Masukkan jumlah angka");
+    return;
+  }
+
+  let max=Math.pow(10,digit);
+  let hasil=[];
+  let batasUnik=sameNumber === "off" ? hitungTanpaNomorSama(digit) : max;
+
+  if(mode === "unique" && jumlah > batasUnik){
+    alert("Jumlah terlalu banyak untuk filter yang dipilih");
+    return;
+  }
+
+  while(hasil.length < jumlah){
+    let angka=Math.floor(Math.random()*max);
+    let formatted=String(angka).padStart(digit,"0");
+
+    if(sameNumber === "off"){
+      let cek=new Set(formatted.split(""));
+      if(cek.size !== formatted.length) continue;
+    }
+
+    if(mode === "unique"){
+      if(!hasil.includes(formatted)) hasil.push(formatted);
+    }else{
+      hasil.push(formatted);
+    }
+  }
+
+  document.getElementById("hasilRandom").value=hasil.join("*")+"*";
+}
+
+function hitungTanpaNomorSama(digit){
+  let total=10;
+  for(let i=1;i<digit;i++){
+    total *= (10 - i);
+  }
+  return total;
+}
+
+function copyText(id){
+  let text=document.getElementById(id).value;
+
+  if(text.trim() === ""){
+    alert("Belum ada hasil untuk dicopy");
+    return;
+  }
+
+  navigator.clipboard.writeText(text);
+  alert("Hasil berhasil dicopy");
+}
+
+function resetBBFS(){
+  document.getElementById("bbfs").value="";
+  document.getElementById("digitBBFS").value="2";
+  document.getElementById("hasilBBFS").value="";
+}
+
+function resetRandom(){
+  document.getElementById("jumlahRandom").value="";
+  document.getElementById("randomDigit").value="4";
+  document.getElementById("randomMode").value="normal";
+  document.getElementById("sameNumber").value="on";
+  document.getElementById("hasilRandom").value="";
+}
+</script>
+
+</body>
+</html>
